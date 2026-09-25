@@ -1,0 +1,110 @@
+/* ==========================================================================
+   SPENDWISE - JAVASCRIPT FOUNDATION (WEEK 6)
+   ========================================================================== */
+
+console.log("=== SpendWise Application Initialized ===");
+
+// --------------------------------------------------------------------------
+// REQUIREMENT 2 & 3: Store Application Data & Collect User Input
+// --------------------------------------------------------------------------
+
+// Default baseline data
+const currencySymbol = "$";
+let totalMonthlyBudget = 0;
+let foodExpense = 0;
+let transportExpense = 0;
+let housingExpense = 0;
+
+/**
+ * Collects budgeting information from the user via prompts.
+ * Converts string prompts into valid floating-point numbers.
+ */
+function collectUserData() {
+  const budgetInput = prompt("Enter your total monthly budget ($):", "3000");
+  const foodInput = prompt("Enter your estimated Food & Dining expenses ($):", "450");
+  const transportInput = prompt("Enter your estimated Transport expenses ($):", "180");
+  const housingInput = prompt("Enter your estimated Housing / Rent expenses ($):", "1200");
+
+  // Parse prompts to numbers (fallback to 0 if input is invalid or cancelled)
+  totalMonthlyBudget = parseFloat(budgetInput) || 0;
+  foodExpense = parseFloat(foodInput) || 0;
+  transportExpense = parseFloat(transportInput) || 0;
+  housingExpense = parseFloat(housingInput) || 0;
+}
+
+// --------------------------------------------------------------------------
+// REQUIREMENT 4 & 5: Perform Calculations & Create Reusable Functions
+// --------------------------------------------------------------------------
+
+/**
+ * Calculates total expenses by summing up individual category costs.
+ * @param {number} food - Food spending
+ * @param {number} transport - Transport spending
+ * @param {number} housing - Housing spending
+ * @returns {number} Total expenses calculated
+ */
+function calculateTotalExpenses(food, transport, housing) {
+  return food + transport + housing;
+}
+
+/**
+ * Calculates remaining balance given total budget and total expenses.
+ * @param {number} budget - Total income/budget allocation
+ * @param {number} expenses - Combined expenses sum
+ * @returns {number} Net remaining balance
+ */
+function calculateRemainingBalance(budget, expenses) {
+  return budget - expenses;
+}
+
+/**
+ * Calculates the percentage of total budget that has been spent.
+ * @param {number} budget - Total income/budget allocation
+ * @param {number} expenses - Combined expenses sum
+ * @returns {number} Percentage value (0-100)
+ */
+function calculateBudgetUsagePercentage(budget, expenses) {
+  if (budget <= 0) return 0;
+  return (expenses / budget) * 100;
+}
+
+// --------------------------------------------------------------------------
+// REQUIREMENT 6: Display Results in Console
+// --------------------------------------------------------------------------
+
+/**
+ * Orchestrates the budgeting calculations and logs formatted results.
+ */
+function runSpendWiseTracker() {
+  // Step 1: Prompt user for inputs
+  collectUserData();
+
+  // Step 2: Compute figures using reusable functions
+  const totalExpenses = calculateTotalExpenses(foodExpense, transportExpense, housingExpense);
+  const remainingBalance = calculateRemainingBalance(totalMonthlyBudget, totalExpenses);
+  const usagePercentage = calculateBudgetUsagePercentage(totalMonthlyBudget, totalExpenses);
+
+  // Step 3: Display formatted output in the browser console
+  console.log("\n----------------------------------------");
+  console.log("       SPENDWISE FINANCIAL REPORT       ");
+  console.log("----------------------------------------");
+  console.log(`Total Monthly Budget:    ${currencySymbol}${totalMonthlyBudget.toFixed(2)}`);
+  console.log(`Food & Dining Expense:   ${currencySymbol}${foodExpense.toFixed(2)}`);
+  console.log(`Transport Expense:       ${currencySymbol}${transportExpense.toFixed(2)}`);
+  console.log(`Housing/Rent Expense:    ${currencySymbol}${housingExpense.toFixed(2)}`);
+  console.log("----------------------------------------");
+  console.log(`Total Calculated Spending: ${currencySymbol}${totalExpenses.toFixed(2)}`);
+  console.log(`Net Remaining Balance:    ${currencySymbol}${remainingBalance.toFixed(2)}`);
+  console.log(`Budget Usage Rate:        ${usagePercentage.toFixed(1)}%`);
+  console.log("----------------------------------------\n");
+
+  // Health status alert based on balance
+  if (remainingBalance < 0) {
+    console.warn("⚠️ ALERT: You have exceeded your monthly budget allowance!");
+  } else {
+    console.log("✅ STATUS: Your spending is within healthy budget boundaries.");
+  }
+}
+
+// Execute the tracker script
+runSpendWiseTracker();
